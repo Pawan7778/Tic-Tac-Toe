@@ -54,12 +54,14 @@ function turn(squareId, player) {
   checkTie();
 }
 
+let aiwin = null;
 function checkWin(board, player) {
   let plays = board.reduce((a, e, i) => (e === player ? a.concat(i) : a), []);
-  let gameWon = null;
+  gameWon = null;
   for (let [index, win] of winCombos.entries()) {
     if (win.every((elem) => plays.indexOf(elem) > -1)) {
       gameWon = { index: index, player: player };
+      aiwin = gameWon;
       break;
     }
   }
@@ -90,8 +92,8 @@ function bestSpot() {
 }
 
 function checkTie() {
-  if (emptySquares().length === 0) {
-    for (cell of cells) {
+  if (emptySquares().length === 0 && !(aiwin.player === aiPlayer)) {
+    for (const cell of cells) {
       cell.style.backgroundColor = "green";
       cell.removeEventListener("click", turnClick, false);
     }
